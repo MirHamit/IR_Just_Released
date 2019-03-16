@@ -277,7 +277,7 @@ fclose($fh);
 								echo '<tr>';
 								echo "<td>$domainNumber</td>";
 								echo "<td style='direction: ltr;'>$domains</td>";
-								echo "<td>$domainLenght</td>";
+								echo "<td>Soon</td>";
 								echo '</tr>';
 
 							}
