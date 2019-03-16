@@ -115,7 +115,7 @@ h1, h2, h3, h4, h5, h6,input, textarea {
 	margin: 0;
 	bottom: 20px;
 	position: relative;
-	right: 15px;
+	right: 0;
 	top: 13px;
 	font-size: 19px;
 	-webkit-transition: all 0.3s ease;
