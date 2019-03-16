@@ -93,7 +93,7 @@ h1, h2, h3, h4, h5, h6,input, textarea {
 #return-to-top {
 	position: fixed;
 	bottom: 20px;
-	left: 20px;
+	right: 20px;
 	background: rgb(0, 0, 0);
 	background: rgba(0, 0, 0, 0.7);
 	width: 50px;
@@ -114,9 +114,8 @@ h1, h2, h3, h4, h5, h6,input, textarea {
 	color: #fff;
 	margin: 0;
 	bottom: 20px;
-	right: 0;
 	position: relative;
-	left: 16px;
+	right: 16px;
 	top: 13px;
 	font-size: 19px;
 	-webkit-transition: all 0.3s ease;
