@@ -1,6 +1,11 @@
 ﻿<?php
+set_time_limit(5000); // time limit for php execution
 date_default_timezone_set('Asia/Tehran');
 $date = date('H:i:s', time());
+
+// get a api key from http://openrank.io and replace with this line
+$openRankApiKey = 'Your API Key To OpenRank.io';
+
 $message = NULL;
 $domainNames = NULL;
 
@@ -116,6 +121,21 @@ function deleteElement(array $element, &$array) {
 	}
 }
 
+function getDomainOr($domainName) {
+	//$d = array('message' => $message , 'progress' => $progress);
+
+	$openrankContent = getPage("https://api.openrank.io/?key=3+CugVeRlIvdiU/5RtVOttpIo5yN11EqA+5u7h1a4k0&d=$domainName&format=csv");
+	$openRankDataArray = explode(',', $openrankContent);
+	if ( ! empty($openRankDataArray[2])) {
+		$domainOr = $openRankDataArray[2];
+	} else {
+		$domainOr = '-';
+	}
+	echo "<td style='direction: ltr;'>$domainOr</td>";
+
+	ob_flush();
+	flush();
+}
 
 $pageContent = getPage('http://www.nic.ir/Show_CAPTCHA');
 
@@ -144,8 +164,26 @@ fclose($fh);
 
 	<!-- Necessery JS file for all pages-->
 	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+
 </head>
 <body class="app flex-row align-items-center">
+<a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+<script>
+	// ===== Scroll to Top ====
+	$(window).scroll(function () {
+		if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
+			$('#return-to-top').fadeIn(200);    // Fade in the arrow
+		} else {
+			$('#return-to-top').fadeOut(200);   // Else fade out the arrow
+		}
+	});
+	$('#return-to-top').click(function () {      // When arrow is clicked
+		$('body,html').animate({
+			scrollTop: 0                       // Scroll to top of body
+		}, 500);
+	});
+</script>
 <div class="container">
 	<div class="row justify-content-center">
 		<div class="col-md-8">
@@ -252,7 +290,7 @@ fclose($fh);
 					<tr>
 						<th>#</th>
 						<th>نام دامنه</th>
-						<th>Alexa Rank</th>
+						<th><a href='http://openrank.io' target='_blank'>Open Rank</a></th>
 					</tr>
 					</thead>
 					<tbody>";
@@ -277,7 +315,10 @@ fclose($fh);
 								echo '<tr>';
 								echo "<td>$domainNumber</td>";
 								echo "<td style='direction: ltr;'>$domains</td>";
-								echo "<td>Soon</td>";
+								//$openrankContent = getPage("https://api.openrank.io/?key=$openRankApiKey&d=$domains&format=csv");
+								//$openRankDataArray = explode(',', $openrankContent);
+								echo getDomainOr($domains);
+								//echo "<td>soon</td>";
 								echo '</tr>';
 
 							}
@@ -303,23 +344,7 @@ fclose($fh);
 		</div>
 	</footer>
 </div>
-<a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
-<script src="assets/js/bootstrap.min.js"></script>
-<script>
-	// ===== Scroll to Top ====
-	$(window).scroll(function () {
-		if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
-			$('#return-to-top').fadeIn(200);    // Fade in the arrow
-		} else {
-			$('#return-to-top').fadeOut(200);   // Else fade out the arrow
-		}
-	});
-	$('#return-to-top').click(function () {      // When arrow is clicked
-		$('body,html').animate({
-			scrollTop: 0                       // Scroll to top of body
-		}, 500);
-	});
-</script>
+
 </body>
 </html>
 <?php
