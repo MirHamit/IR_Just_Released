@@ -335,9 +335,7 @@ fclose($fh);
 									echo getDomainOr($domains);
 								} else
 								{
-
-									echo "<td id='show-data'><button class='btn btn-sm btn-primary'>Soon <i class='fa fa-dot-circle-o'></i></button></td>";
-
+									echo "<td style='direction: ltr'><div class='$domains'><input type='button' name='' class='getOpenRankData btn btn-primary px-4' id='$domains' value='Open Rank'></div></td>";
 								}
 								echo '</tr>';
 
@@ -365,9 +363,47 @@ fclose($fh);
 		</div>
 	</footer>
 </div>
-
 </body>
 </html>
+<script>
+
+	$(document).ready(function () {
+		$(".getOpenRankData").click(function () {
+			// alert(this.id); // or alert($(this).attr('id'));
+			var value = {
+				domain: this.id,
+			};
+
+			// process the form
+			$.ajax({
+				type: "GET",
+				url: "https://tabriz.li/ir/openrank.php?domain=", // Using myjson.com to store the JSON
+				data: value,
+				dataType: 'json',
+				beforeSend: function () {
+					// console.log('ajax start');
+					document.getElementById(value.domain).value = "...";
+				},
+				success: function (e) {
+					// console.log('ajax stop');
+				}
+			})
+			// using the done promise callback
+					.done(function (data) {
+						openRank = Object.entries(data.data);
+						document.getElementById(value.domain).value = openRank[0][1].openrank;
+					})
+					.fail(function (data) {
+						// console.log(".fail" + data);
+						// show any errors
+						// best to remove for production
+						// console.log(data);
+						document.getElementById(value.domain).value = "Open Rank"
+					});
+		});
+	});
+
+</script>
 <?php
 // clear all vars and arrays
 $vars = array_keys(get_defined_vars());
