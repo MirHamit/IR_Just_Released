@@ -1,5 +1,5 @@
 ﻿<?php
-set_time_limit(5000); // time limit for php execution
+set_time_limit(0); // time limit for php execution
 date_default_timezone_set('Asia/Tehran');
 $date = date('H:i:s', time());
 
@@ -8,6 +8,7 @@ $openRankApiKey = 'Your API Key To OpenRank.io';
 
 $message = NULL;
 $domainNames = NULL;
+$openRankChecked = NULL;
 
 // check for time break in nic.ir
 if ((date('H:i') >= '23:00') || (date('H:i') < '00:30'))
@@ -22,6 +23,10 @@ if (isset($_GET['maxchar']))
 	{
 		$message = 'maxcharError';
 	}
+}
+if (isset($_GET['openrank']))
+{
+	$openRankChecked = 1;
 }
 if (isset($_GET['captcha']))
 {
@@ -122,19 +127,20 @@ function deleteElement(array $element, &$array) {
 }
 
 function getDomainOr($domainName) {
-	//$d = array('message' => $message , 'progress' => $progress);
 
 	$openrankContent = getPage("https://api.openrank.io/?key=3+CugVeRlIvdiU/5RtVOttpIo5yN11EqA+5u7h1a4k0&d=$domainName&format=csv");
 	$openRankDataArray = explode(',', $openrankContent);
-	if ( ! empty($openRankDataArray[2])) {
+	if (!empty($openRankDataArray[2]))
+	{
 		$domainOr = $openRankDataArray[2];
-	} else {
+	} else
+	{
 		$domainOr = '-';
 	}
 	echo "<td style='direction: ltr;'>$domainOr</td>";
-
 	ob_flush();
 	flush();
+	sleep(1);
 }
 
 $pageContent = getPage('http://www.nic.ir/Show_CAPTCHA');
@@ -248,6 +254,16 @@ fclose($fh);
 										</label>
 									</div>
 								</div>
+								<div class="form-group row">
+									<label class="col-md-7 col-form-label" for="openrank">چک کردن OpenRank</label>
+									<div class="col-md-5 col-form-label">
+										<div class="form-check checkbox">
+											<input class="form-check-input" id="openrank" name="openrank"
+												   type="checkbox" value="1">
+										</div>
+									</div>
+								</div>
+
 								<div class="input-group mb-4">
 									<input class="form-control" autocomplete="off" name="captcha" type="text"
 										   placeholder="کد تصویر">
@@ -310,15 +326,19 @@ fclose($fh);
 							{
 
 								$domainNumber ++;
-								//echo "<td colspan=\"$domainLenght\" align=\"center\"> دامنه های $domainLenght حرفی</td>";
 
 								echo '<tr>';
 								echo "<td>$domainNumber</td>";
 								echo "<td style='direction: ltr;'>$domains</td>";
-								//$openrankContent = getPage("https://api.openrank.io/?key=$openRankApiKey&d=$domains&format=csv");
-								//$openRankDataArray = explode(',', $openrankContent);
-								echo getDomainOr($domains);
-								//echo "<td>soon</td>";
+								if ($openRankChecked == 1)
+								{
+									echo getDomainOr($domains);
+								} else
+								{
+
+									echo "<td id='show-data'><button class='btn btn-sm btn-primary'>Soon <i class='fa fa-dot-circle-o'></i></button></td>";
+
+								}
 								echo '</tr>';
 
 							}
@@ -329,6 +349,7 @@ fclose($fh);
 				}
 
 				?>
+
 
 			</div>
 
